@@ -21,7 +21,8 @@
     <parent>
         <artifactId>apm-application-toolkit</artifactId>
         <groupId>org.apache.skywalking</groupId>
-        <version>6.6.0</version>
+        <!--<version>6.6.0</version>-->
+        <version>5.0.0-beta-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -44,6 +45,11 @@
             <artifactId>logstash-logback-encoder</artifactId>
             <version>${logstash.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.bizcloud.arch</groupId>
+            <artifactId>routing-dispatcher</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
