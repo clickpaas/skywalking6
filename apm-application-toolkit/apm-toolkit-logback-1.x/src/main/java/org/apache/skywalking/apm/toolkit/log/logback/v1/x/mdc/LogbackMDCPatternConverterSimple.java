@@ -22,15 +22,16 @@ package org.apache.skywalking.apm.toolkit.log.logback.v1.x.mdc;
 import ch.qos.logback.classic.pattern.MDCConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.util.OptionHelper;
+import com.bizcloud.arch.routing.RoutingContext;
+import org.apache.skywalking.apm.toolkit.trace.TraceContext;
 
 /**
  * @author zhangkewei
  */
-public class LogbackMDCPatternConverter extends MDCConverter {
-    private static final String CONVERT_KEY = "tid";
+public class LogbackMDCPatternConverterSimple extends MDCConverter {
+    private static final  String CONVERT_KEY = "tid";
 
-    private static boolean convert4TID = false;
-
+    private boolean convert4TID = false;
     @Override
     public void start() {
         super.start();
@@ -39,25 +40,20 @@ public class LogbackMDCPatternConverter extends MDCConverter {
             convert4TID = true;
         }
     }
-
     @Override
     public String convert(ILoggingEvent iLoggingEvent) {
-        if (convert4TID) {
-            String tidInfo = convertTID(iLoggingEvent);
-            // Ignored
-            if (tidInfo == null || tidInfo.indexOf("N/A") > 0 || tidInfo.indexOf("Ignored") > 0) {
-                String tid = iLoggingEvent.getMDCPropertyMap().get("_tid");
-                if (tid != null) {
-                    return "TID:" + tid;
-                }
-            }
-            return tidInfo;
-        }
-
-        return super.convert(iLoggingEvent);
+        return convert4TID ? convertTID(iLoggingEvent) : super.convert(iLoggingEvent);
     }
 
     public String convertTID(ILoggingEvent iLoggingEvent) {
+        String tid = TraceContext.traceId();
+        if (tid != null && !"".equals(tid)) {
+            return "TID:" + tid;
+        }
+        String routingTid = RoutingContext.getTid();
+        if (routingTid != null && !"".equals(routingTid)) {
+            return "TID:" + routingTid;
+        }
         return "TID: N/A";
     }
 }
