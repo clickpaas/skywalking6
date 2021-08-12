@@ -43,14 +43,20 @@ public class LogbackMDCPatternConverter extends MDCConverter {
     @Override
     public String convert(ILoggingEvent iLoggingEvent) {
         if (convert4TID) {
-            String tidInfo = convertTID(iLoggingEvent);
-            // Ignored
-            if (tidInfo == null || tidInfo.indexOf("N/A") > 0 || tidInfo.indexOf("Ignored") > 0) {
+            if (iLoggingEvent.getMDCPropertyMap() != null) {
                 String tid = iLoggingEvent.getMDCPropertyMap().get("_tid");
                 if (tid != null) {
                     return "TID:" + tid;
                 }
             }
+            String tidInfo = convertTID(iLoggingEvent);
+            // Ignored
+//            if (tidInfo == null || tidInfo.indexOf("N/A") > 0 || tidInfo.indexOf("Ignored") > 0) {
+//                String tid = iLoggingEvent.getMDCPropertyMap().get("_tid");
+//                if (tid != null) {
+//                    return "TID:" + tid;
+//                }
+//            }
             return tidInfo;
         }
 
