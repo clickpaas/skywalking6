@@ -38,7 +38,8 @@ public class LogbackPatternConverterSimple extends ClassicConverter {
     @Override
     public String convert(ILoggingEvent iLoggingEvent) {
         String tid = TraceContext.traceId();
-        if (tid != null && !"".equals(tid)) {
+        // attention! tid=[Ignored Trace]
+        if (tid != null && !"".equals(tid) && !tid.contains("[")) {
             return "TID:" + tid;
         }
         String routingTid = RoutingContext.getTid();
