@@ -1,0 +1,1 @@
+mvn deploy -Dmaven.test.skip -Dcheckstyle.skip=true
